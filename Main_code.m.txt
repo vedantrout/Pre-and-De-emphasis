@@ -1,0 +1,35 @@
+% Pre-emphasis and De-emphasis Network Verification
+
+% Parameters
+fc = 1000;  % Cutoff frequency (1 kHz)
+R = 1e3;    % Resistance (1 kΩ)
+C = 1 / (2 * pi * fc * R);  % Capacitance for given cutoff
+
+% Frequency range for plotting (log scale)
+frequencies = logspace(2, 6, 1000);  % From 100 Hz to 1 MHz
+omega = 2 * pi * frequencies;  % Angular frequency
+
+% Pre-emphasis Transfer Function: H_pre(f) = 1 + j(f / fc)
+H_pre = 1 + 1i * omega / (2 * pi * fc);
+
+% De-emphasis Transfer Function: H_de(f) = 1 / (1 + j(f / fc))
+H_de = 1 ./ (1 + 1i * omega / (2 * pi * fc));
+
+% Gain Calculation (Magnitude of Transfer Function)
+gain_pre = abs(H_pre);  % Magnitude of pre-emphasis
+gain_de = abs(H_de);    % Magnitude of de-emphasis
+
+% Plotting the Gain vs Frequency
+figure;
+semilogx(frequencies, 20*log10(gain_pre), 'b', 'LineWidth', 2);  % Pre-emphasis plot
+hold on;
+semilogx(frequencies, 20*log10(gain_de), 'r', 'LineWidth', 2);  % De-emphasis plot
+
+% Labels and Formatting
+title('Pre-emphasis and De-emphasis Gain vs Frequency');
+xlabel('Frequency (Hz)');
+ylabel('Gain (dB)');
+grid on;
+legend('Pre-emphasis', 'De-emphasis');
+axis tight;
+xlim([100 1e6]);
